@@ -1,54 +1,22 @@
 import React from "react";
+import axios from "axios";
 import Header from "./components/Header";
 import Users from "./components/Users";
 import AddUser from "./components/AddUser";
 
+const endpoint = '/api/users?page=1'
+const baseUrl = 'https://reqres.in' + endpoint
+
 class App extends React.Component {
     constructor(props){
         super(props)
+
+        axios.get(baseUrl).then((res) => {
+            this.setState({users: res.data.data})
+        })
+
         this.state = {
-            users: [
-                {
-                    "id": 1,
-                    "firstname": "John",
-                    "lastname": "Doe",
-                    "bio": "Software developer and tech enthusiast.",
-                    "age": 28,
-                    "isHappy": true
-                },
-                {
-                    "id": 2,
-                    "firstname": "Jane",
-                    "lastname": "Smith",
-                    "bio": "Digital marketer with a passion for creativity.",
-                    "age": 34,
-                    "isHappy": false
-                },
-                {
-                    "id": 3,
-                    "firstname": "Alice",
-                    "lastname": "Johnson",
-                    "bio": "Graphic designer and art lover.",
-                    "age": 25,
-                    "isHappy": true
-                },
-                {
-                    "id": 4,
-                    "firstname": "Bob",
-                    "lastname": "Brown",
-                    "bio": "Project manager with a focus on efficiency.",
-                    "age": 40,
-                    "isHappy": false
-                },
-                {
-                    "id": 5,
-                    "firstname": "Charlie",
-                    "lastname": "Davis",
-                    "bio": "Content writer and traveler.",
-                    "age": 30,
-                    "isHappy": true
-                }
-            ]
+            users: []
         }
         this.lastId = this.state.users.length
         this.addUser = this.addUser.bind(this)
@@ -89,7 +57,7 @@ class App extends React.Component {
 
     editUser(user){
         let allUsers = this.state.users
-        const i = allUsers.findIndex((el) => el.id == user.id)
+        const i = allUsers.findIndex((el) => el.id === user.id)
         allUsers[i] = user
         this.setState({users: []}, () => {
             this.setState({users: [...allUsers]})
